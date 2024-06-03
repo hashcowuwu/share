@@ -10,7 +10,6 @@ pthread_mutex_t global_lock;
 
 void *routine(void *arg) {
   for (int i = 0 ; i < N ; ++ i) {
-
     pthread_mutex_lock(&global_lock);
     a ++ ;
     pthread_mutex_unlock(&global_lock);
