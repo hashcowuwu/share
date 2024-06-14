@@ -1,4 +1,4 @@
-CFLAGS=-Wall -g -O1
+CFLAGS=-Wall -g -O2
 
 TEST_TARGETS=main
 
