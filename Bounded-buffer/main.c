@@ -3,14 +3,18 @@
 
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t output_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
 int buffer_has_data = 0;
 
 
 void* producer(void* arg){
+    pthread_mutex_lock(&output_mutex);
 
     printf("<");
+
+    pthread_mutex_unlock(&output_mutex);
 
     pthread_mutex_lock(&mutex);
    
@@ -32,8 +36,9 @@ void* consumer(void* arg){
         pthread_cond_wait(&cond, &mutex);
     }
 
+    pthread_mutex_lock(&output_mutex);
     printf(">");
-
+    pthread_mutex_unlock(&output_mutex);
     buffer_has_data = 0;
 
     pthread_mutex_unlock(&mutex);
