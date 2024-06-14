@@ -5,17 +5,15 @@
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t output_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
-
+int n ;
 int buffer_has_data = 0;
 
 
 void* producer(void* arg){
-//    pthread_mutex_lock(&output_mutex);
 
 
+    for (int i = 1 ; i < n; ++ i )
     printf("<");
-
-//    pthread_mutex_unlock(&output_mutex);
 
     pthread_mutex_lock(&mutex);
 
@@ -33,13 +31,13 @@ void* producer(void* arg){
 void* consumer(void* arg){
     pthread_mutex_lock(&mutex);
 
-    if(buffer_has_data == 0){
+    while(buffer_has_data == 0){
         pthread_cond_wait(&cond, &mutex);
     }
 
-    pthread_mutex_lock(&output_mutex);
+    for (int i = 1 ; i < n; ++ i )
     printf(">");
-    pthread_mutex_unlock(&output_mutex);
+
     buffer_has_data = 0;
 
     pthread_mutex_unlock(&mutex);
@@ -51,19 +49,10 @@ void* consumer(void* arg){
 int main(){
     pthread_t pthreads[N];
     pthread_t bthreads[N];
-    for (int i = 0 ; i < N ; ++ i ) {
-        pthread_create(&bthreads[i],NULL,consumer,0);
-    //    pthread_create(&pthreads[i],NULL,producer,0);
-        //pthread_create(&bthreads[i],NULL,consumer,0);
-
-    }
-    for (int i = 0 ; i < N ; ++ i ) {
-        pthread_create(&pthreads[i],NULL,producer,0);
-    }
-
-    for (int i = 0 ; i < N ; ++ i ) {
-        pthread_join(pthreads[i], NULL);
-        pthread_join(bthreads[i], NULL);
-    }
+    scanf("%d",&n);
+    pthread_create(&bthreads[0],NULL,consumer,0);
+    pthread_create(&pthreads[0],NULL,producer,0);
+    pthread_join(pthreads[0], NULL);
+    pthread_join(bthreads[0], NULL);
 
 }
