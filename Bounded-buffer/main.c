@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <pthread.h>
 
-
+#define N 1
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t output_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
@@ -48,13 +48,14 @@ void* consumer(void* arg){
 
 
 int main(){
-    pthread_t pthreads[2];
-    pthread_t bthreads[2];
-    for (int i = 0 ; i < 2 ; ++ i ) {
+    pthread_t pthreads[N];
+    pthread_t bthreads[N];
+    for (int i = 0 ; i < N ; ++ i ) {
         pthread_create(&pthreads[i],NULL,producer,0);
         pthread_create(&bthreads[i],NULL,consumer,0);
     }
-    for (int i = 0 ; i < 2 ; ++ i ) {
+    
+    for (int i = 0 ; i < N ; ++ i ) {
         pthread_join(pthreads[i], NULL);
         pthread_join(bthreads[i], NULL);
     }
